@@ -102,10 +102,10 @@ class CountDown:
         thread.start()                                  # Start the execution
     def add_task(self,task):
         self.task_list.append(task)
-        task_name = Label(root, text=task.name,fg = "#381310", bg="#de9e99",font=("Comic Sans MS",15))
+        task_name = Label(root, text=task.name,fg = "#381310", bg="#bfadac",font=("Comic Sans MS",15))
         task_name.grid(row=len(self.task_list), column=0, pady = 5,padx = 10)
         task_name.bind("<Button-1>", lambda e: self.clock_trigger(self.task_list.index(task)))
-        duration = Label(root, text=task.duration[0]+" : "+task.duration[1]+" : "+task.duration[2],fg = "#381310", bg="#de9e99",font=("Comic Sans MS",15))
+        duration = Label(root, text=task.duration[0]+" : "+task.duration[1]+" : "+task.duration[2],fg = "#381310", bg="#bfadac",font=("Comic Sans MS",15))
         duration.grid(row=len(self.task_list), column=1, pady = 5)
         remove = Button(root, image=self.remove_img,height = 20, width = 20,command=lambda: self.remove(task))
         remove.grid(row=len(self.task_list),column = 2, padx= 10)
@@ -134,12 +134,12 @@ class CountDown:
         elif (current[1] == 0 or current[1] == "00") and current[0] != 0 and current[0] != "00" and (current[2] == 0 or current[2] == "00") :
             new_duration = [int(current[0]) -1 ,59, 59]
         elif (current[1] == 0 or current[1] == "00") and (current[2] == 0 or current[2] == "00") and (current[0] == 0 or current[0] == "00"):
-            new_duration = []
+            new_duration = ["00","00","00"]
         else:
             new_duration = [current[0],current[1],int(current[2]) - 1]
         self.task_list[index].duration = new_duration
 
-        duration = Label(root, text=str(new_duration[0])+" : "+str(new_duration[1])+" : "+str(new_duration[2]),fg = "#381310", bg="#de9e99",font=("Comic Sans MS",15))
+        duration = Label(root, text=str(new_duration[0])+" : "+str(new_duration[1])+" : "+str(new_duration[2]),fg = "#381310",bg="#bfadac",font=("Comic Sans MS",15))
         duration.grid(row=index + 1, column=1)
 
     def remove(self,task):
@@ -153,10 +153,15 @@ class main(object):
     def __init__(self,master):
         self.countdown = CountDown()
         self.master = master
-        self.addButton = Button(master, text="Add Task", padx=40, pady=20, command=self.call_popup)
-        self.addButton.grid(row=0, column=0)
-        self.renderButton = Button(master, text="Render", padx=40, pady=20, command=self.countdown.edit)
-        self.renderButton.grid(row=0, column=1)
+        self.bottomframe = Frame(root,bg='#de9e99', width=600, height=120)
+        self.bottomframe.grid(row=0, column=0,columnspan=3)
+        self.photo_add = PhotoImage(file="add.png")
+        self.refresh_but = PhotoImage(file="refresh.png")
+        self.addButton = Button(master, image=self.photo_add,height = 40, width = 40, command=self.call_popup)
+        self.addButton.grid(row=0, column=0,sticky =NW, pady = 20,padx =50)
+        self.main_label = Label(master, text="Countdown App",fg = "#381310",bg='#de9e99',font=("Comic Sans MS",25,"bold")).grid(row=0,column=1)
+        self.renderButton = Button(master, image = self.refresh_but, height = 40, width = 40, command=self.countdown.edit)
+        self.renderButton.grid(row=0, column=2,sticky = NE, pady = 20,padx =50)
 
     def call_popup(self):
         popup = PopUp(self.master)
@@ -167,7 +172,7 @@ class main(object):
 if __name__ == "__main__":
     root = tk.Tk()
     root.title("Countdown App")
-
+    root.configure(background="#bfadac")
     m=main(root)
     root.mainloop()
 
