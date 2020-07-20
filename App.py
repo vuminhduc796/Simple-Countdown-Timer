@@ -96,6 +96,7 @@ class Task:
 class CountDown:
     def __init__(self):
         self.task_list =[]
+        self.remove_img = PhotoImage(file="remove.png")
         thread = Thread(target=self.update, args=())
         thread.daemon = True                            # Daemonize thread
         thread.start()                                  # Start the execution
@@ -106,6 +107,9 @@ class CountDown:
         task_name.bind("<Button-1>", lambda e: self.clock_trigger(self.task_list.index(task)))
         duration = Label(root, text=task.duration[0]+" : "+task.duration[1]+" : "+task.duration[2],fg = "#381310", bg="#de9e99",font=("Comic Sans MS",15))
         duration.grid(row=len(self.task_list), column=1, pady = 5)
+        remove = Button(root, image=self.remove_img,height = 20, width = 20,command=lambda: self.remove(task))
+        remove.grid(row=len(self.task_list),column = 2, padx= 10)
+
 
     def edit(self):
     
@@ -116,6 +120,7 @@ class CountDown:
 
     def update(self):
         while 1:
+
             time.sleep(1)
             for index in range(len(self.task_list)):
                 if self.task_list[index].running:
@@ -137,6 +142,12 @@ class CountDown:
         duration = Label(root, text=str(new_duration[0])+" : "+str(new_duration[1])+" : "+str(new_duration[2]),fg = "#381310", bg="#de9e99",font=("Comic Sans MS",15))
         duration.grid(row=index + 1, column=1)
 
+    def remove(self,task):
+        task.running = False
+        for label in root.grid_slaves():
+            if int(label.grid_info()["row"])  == self.task_list.index(task)+1:
+                label.grid_forget()
+
 
 class main(object):
     def __init__(self,master):
@@ -156,6 +167,7 @@ class main(object):
 if __name__ == "__main__":
     root = tk.Tk()
     root.title("Countdown App")
+
     m=main(root)
     root.mainloop()
 
